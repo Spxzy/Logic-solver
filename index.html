@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <script type="text/javascript">
+      let ALPHABET = "abcdefghijklmopqrstuvwxyz"
+      class rule {
+        constructor(input, output) {
+          this.input = input;
+          this.output = output;
+        }
+
+        applyTo(query){
+          query = query.replace(" ","").split("")
+          let input = this.input.replace(" ","").split("")
+          let variables = {}
+          for (let i = 0; i < query.length; i++){
+            console.log(ALPHABET.indexOf(query[i]) > -1);
+            if (ALPHABET.indexOf(query[i]) > -1){
+              variables[input[i]] = query[i]
+            }
+          }
+          query = this.output
+          console.log(query);
+          for (var key in variables) {
+            query = query.replace(key, variables[key])
+          }
+          return query
+        }
+      }
+      let query = "y ↔ x"
+      let rules = {
+        "negation_normal_form": [
+          new rule("A ↔ B", "(¬A ∨ B) ∧ (A ∨ ¬B)"),
+          new rule("A → B", "¬A ∨ B"),
+          new rule("¬¬A", "A")
+        ]
+      }
+
+      function to_nnf(query){
+        let nnf_rules = rules["negation_normal_form"];
+        for (let i = 0; i < nnf_rules.length; i++) {
+          let rule = nnf_rules[i]
+          if (match(query, rule.input)) {
+            query = rule.applyTo(query)
+            console.log(query);
+          }
+        }
+      }
+
+      function match(query, input){
+        query = query.replace(" ","").split("")
+        input = input.replace(" ","").split("")
+        console.log(query);
+        console.log(input);
+        for (let i = 0; i < input.length; i++){
+          if (query[i] != input[i] && ALPHABET.toUpperCase().indexOf(input[i]) == -1){
+            return false
+          }
+        }
+        return true
+      }
+      to_nnf(query)
+    </script>
+  </head>
+  <body>
+
+  </body>
+</html>
